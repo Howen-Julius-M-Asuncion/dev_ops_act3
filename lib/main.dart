@@ -19,14 +19,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool airplaneMode = false;
 
-  bool isWifiOn = true;
-  bool isBluetoothOn = true;
-  bool isHotspotOn = true;
-
-  bool previousWifiState = false;
-  bool previousBluetoothState = false;
-  bool previousHotspotState = false;
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -54,18 +46,6 @@ class _MyAppState extends State<MyApp> {
                       onChanged: (value) {
                         setState(() {
                           airplaneMode = value;
-                          if(airplaneMode){
-                            // store previous states
-                            previousBluetoothState = isBluetoothOn;
-                            previousWifiState = isWifiOn;
-                            previousHotspotState = isHotspotOn;
-
-                            isBluetoothOn = false;
-                            isWifiOn = false;
-                          }else{
-                            isBluetoothOn = previousBluetoothState;
-                            isWifiOn = previousWifiState;
-                          }
                         });
                       }),
                   ),
@@ -79,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                       child: Icon(CupertinoIcons.wifi, color: CupertinoColors.white)
                     ),
                     leadingSize: 32,
-                    additionalInfo: Text(isWifiOn ? 'HJR Wifi' : 'Off'),
+                    additionalInfo: Text('HGR Wifi'),
                     trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
                     onTap: () {},
                   ),
@@ -93,9 +73,9 @@ class _MyAppState extends State<MyApp> {
                       child: Icon(CupertinoIcons.bluetooth, color: CupertinoColors.white)
                     ),
                     leadingSize: 32,
-                    additionalInfo: Text(isBluetoothOn ? 'On' : 'Off'),
+                    additionalInfo: Text('On'),
                     trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
-                    onTap: (){},
+                    // onTap: ,
                   ),
                   CupertinoListTile(
                     title: Text('Cellular'),
@@ -119,9 +99,8 @@ class _MyAppState extends State<MyApp> {
                       child: Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white)
                     ),
                     leadingSize: 32,
-                    additionalInfo: Text(isBluetoothOn ? 'On' : 'Off'),
+                    additionalInfo: Text('Off'),
                     trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
-                    onTap: (){},
                   ),
                 ],
               )
