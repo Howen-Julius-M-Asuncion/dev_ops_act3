@@ -1,5 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:ios_settings/pages/wifi.dart';
+import '/pages/bluetooth.dart';
 
 void main() => runApp(CupertinoApp(
   theme: CupertinoThemeData(
@@ -9,15 +10,10 @@ void main() => runApp(CupertinoApp(
   home: MyApp(),
 ));
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class OptionSettings {
   bool airplaneMode = false;
+
+  bool isLoading = false;
 
   bool isWifiOn = true;
   bool isBluetoothOn = true;
@@ -26,6 +22,35 @@ class _MyAppState extends State<MyApp> {
   bool previousWifiState = false;
   bool previousBluetoothState = false;
   bool previousHotspotState = false;
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final OptionSettings settings = OptionSettings();
+
+  void toggleSetting(bool currentValue, Function(bool) updateState) {
+    if (!currentValue) {
+      // If turning ON -> show loading
+      setState(() => settings.isLoading = true);
+
+      Future.delayed(Duration(milliseconds: 1200), () {
+        setState(() {
+          settings.isLoading = false;
+          updateState(true); // Set new value after loading
+        });
+      });
+    } else {
+      // If turning OFF -> change immediately
+      setState(() => updateState(false));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -49,21 +74,33 @@ class _MyAppState extends State<MyApp> {
                           ),
                           leadingSize: 32,
                           trailing: CupertinoSwitch(
-                              value: airplaneMode,
+                              value: settings.airplaneMode,
                               onChanged: (value) {
                                 setState(() {
-                                  airplaneMode = value;
-                                  if(airplaneMode){
-                                    // store previous states
-                                    previousBluetoothState = isBluetoothOn;
-                                    previousWifiState = isWifiOn;
-                                    previousHotspotState = isHotspotOn;
+                                  settings.airplaneMode = value;
+                                  settings.isLoading = true;
 
-                                    isBluetoothOn = false;
-                                    isWifiOn = false;
-                                  }else{
-                                    isBluetoothOn = previousBluetoothState;
-                                    isWifiOn = previousWifiState;
+                                  if (settings.airplaneMode) {
+                                    // Store previous states
+                                    settings.previousBluetoothState = settings.isBluetoothOn;
+                                    settings.previousWifiState = settings.isWifiOn;
+                                    settings.previousHotspotState = settings.isHotspotOn;
+
+                                    settings.isBluetoothOn = false;
+                                    settings.isWifiOn = false;
+                                    settings.isHotspotOn = false;
+
+                                    settings.isLoading = false; // No need to delay turning off
+                                  } else {
+                                    // Simulate loading before restoring previous states
+                                    Future.delayed(Duration(milliseconds: 1200), () {
+                                      setState(() {
+                                        settings.isLoading = false;
+                                        settings.isBluetoothOn = settings.previousBluetoothState;
+                                        settings.isWifiOn = settings.previousWifiState;
+                                        settings.isHotspotOn = settings.previousHotspotState;
+                                      });
+                                    });
                                   }
                                 });
                               }),
@@ -78,9 +115,15 @@ class _MyAppState extends State<MyApp> {
                               child: Icon(CupertinoIcons.wifi, color: CupertinoColors.white)
                           ),
                           leadingSize: 32,
-                          additionalInfo: Text(isWifiOn ? 'HJR Wifi' : 'Off'),
+                          additionalInfo:  settings.previousWifiState && settings.isLoading
+                              ? CupertinoActivityIndicator() : Text(settings.isWifiOn ? 'HJR Wifi' : 'Off'),
                           trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(builder: (context) => Wifipage()),
+                            );
+                          },
                         ),
                         CupertinoListTile(
                           title: Text('Bluetooth'),
@@ -92,9 +135,16 @@ class _MyAppState extends State<MyApp> {
                               child: Icon(CupertinoIcons.bluetooth, color: CupertinoColors.white)
                           ),
                           leadingSize: 32,
-                          additionalInfo: Text(isBluetoothOn ? 'On' : 'Off'),
+                          additionalInfo: settings.previousBluetoothState && settings.isLoading
+                              ? CupertinoActivityIndicator()
+                              : Text(settings.isBluetoothOn ? 'On' : 'Off'),
                           trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
-                          onTap: (){},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(builder: (context) => BTpage()),
+                            );
+                          },
                         ),
                         CupertinoListTile(
                           title: Text('Cellular'),
@@ -118,7 +168,9 @@ class _MyAppState extends State<MyApp> {
                               child: Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white)
                           ),
                           leadingSize: 32,
-                          additionalInfo: Text(isBluetoothOn ? 'On' : 'Off'),
+                          additionalInfo: settings.previousHotspotState && settings.isLoading
+                              ? CupertinoActivityIndicator()
+                              : Text(settings.isHotspotOn ? 'On' : 'Off'),
                           trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
                           onTap: (){},
                         ),
