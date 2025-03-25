@@ -9,6 +9,8 @@ class BTpage extends StatefulWidget {
   State<BTpage> createState() => _BTpageState();
 }
 
+bool isLoading = false;
+
 class _BTpageState extends State<BTpage> {
 
   List<Map<String, dynamic>> devices = [
@@ -41,9 +43,22 @@ class _BTpageState extends State<BTpage> {
                   CupertinoListTile(
                     title: Text('Bluetooth'),
                     trailing: CupertinoSwitch(
-                      value: true,
+                      value: OptionSettings.isBluetoothOn,
                       onChanged: (value){
-                        setState(() {});
+                        setState(() {
+                          if(OptionSettings.airplaneMode){
+
+                          } else {
+                            OptionSettings.isBluetoothOn = !OptionSettings.isBluetoothOn;
+                            isLoading = true;
+                            Future.delayed(Duration(milliseconds: 3000), () {
+                              setState(() {
+                                isLoading = false;
+                              });
+                            });
+                          }
+
+                        });
                       },
                     ),
                   ),
@@ -52,16 +67,24 @@ class _BTpageState extends State<BTpage> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(30, 4, 30, 12),
-              child: Text('This iPhone is discoverable as "iPhone" while Bluetooth Settings is open.', style: TextStyle(fontSize: 14, color: CupertinoColors.systemGrey)),
+              child: Text(
+                OptionSettings.airplaneMode
+                    ? 'To enable Bluetooth, turn off Airplane Mode.'
+                    : (!OptionSettings.isBluetoothOn
+                    ? 'AirDrop, AirPlay, Find My, and Location Services use Bluetooth.'
+                    : 'This iPhone is discoverable as "HJR iPhone" while Bluetooth Settings is open.'),
+                style: TextStyle(fontSize: 16, color: CupertinoColors.systemGrey),
+              ),
             ),
+            if(OptionSettings.isBluetoothOn)
             CupertinoListSection.insetGrouped(
               header: Row(children: [
                 SizedBox(width: 14,),
                 Text('MY DEVICES', style: TextStyle(fontSize: 14, color: CupertinoColors.systemGrey, fontWeight: FontWeight.w100)),
                 SizedBox(width: 14,),
-                CupertinoActivityIndicator()
+                if(isLoading) CupertinoActivityIndicator()
               ],),
-              children: devices.map((device) {
+              children: isLoading ? [] : devices.map((device) {
                 return CupertinoListTile(
                   title: Text(device['name']),
                   additionalInfo: Text(
@@ -76,6 +99,7 @@ class _BTpageState extends State<BTpage> {
               }).toList(),
             ),
             SizedBox(height: 18,),
+            if(OptionSettings.isBluetoothOn)
             CupertinoListSection.insetGrouped(
               header: Row(children: [
                 SizedBox(width: 14,),
