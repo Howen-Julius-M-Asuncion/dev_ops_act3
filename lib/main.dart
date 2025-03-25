@@ -22,23 +22,6 @@ bool isLoading = false;
 
 class _MyAppState extends State<MyApp> {
 
-  void toggleSetting(bool currentValue, Function(bool) updateState) {
-    if (!currentValue) {
-      // If turning ON -> show loading
-      setState(() => isLoading = true);
-
-      Future.delayed(Duration(milliseconds: 1200), () {
-        setState(() {
-          isLoading = false;
-          updateState(true); // Set new value after loading
-        });
-      });
-    } else {
-      // If turning OFF -> change immediately
-      setState(() => updateState(false));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
