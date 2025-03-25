@@ -105,53 +105,54 @@ class _MyAppState extends State<MyApp> {
                       CupertinoListTile(
                         title: Text('Airplane Mode'),
                         leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: CupertinoColors.systemOrange),
-                            child: Icon(CupertinoIcons.airplane, color: CupertinoColors.white)
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: CupertinoColors.systemOrange),
+                          child: Icon(CupertinoIcons.airplane, color: CupertinoColors.white)
                         ),
                         leadingSize: 32,
                         trailing: CupertinoSwitch(
-                            value: OptionSettings.airplaneMode,
-                            onChanged: (value) {
-                              setState(() {
-                                OptionSettings.airplaneMode = value;
-                                isLoading = true;
+                          value: OptionSettings.airplaneMode,
+                          onChanged: (value) {
+                            setState(() {
+                              OptionSettings.airplaneMode = value;
+                              isLoading = true;
 
-                                if (OptionSettings.airplaneMode) {
-                                  // Store previous states
-                                  OptionSettings.previousBluetoothState = OptionSettings.isBluetoothOn;
-                                  OptionSettings.previousWifiState = OptionSettings.isWifiOn;
-                                  OptionSettings.previousHotspotState = OptionSettings.isHotspotOn;
+                              if (OptionSettings.airplaneMode) {
+                                // Store previous states
+                                OptionSettings.previousBluetoothState = OptionSettings.isBluetoothOn;
+                                OptionSettings.previousWifiState = OptionSettings.isWifiOn;
+                                OptionSettings.previousHotspotState = OptionSettings.isHotspotOn;
 
-                                  OptionSettings.isBluetoothOn = false;
-                                  OptionSettings.isWifiOn = false;
-                                  OptionSettings.isHotspotOn = false;
+                                OptionSettings.isBluetoothOn = false;
+                                OptionSettings.isWifiOn = false;
+                                OptionSettings.isHotspotOn = false;
 
-                                  isLoading = false;
-                                } else {
-                                  // Simulate loading before restoring previous states
-                                  Future.delayed(Duration(milliseconds: 1200), () {
-                                    setState(() {
-                                      isLoading = false;
-                                      OptionSettings.isBluetoothOn = OptionSettings.previousBluetoothState;
-                                      OptionSettings.isWifiOn = OptionSettings.previousWifiState;
-                                      OptionSettings.isHotspotOn = OptionSettings.previousHotspotState;
-                                    });
+                                isLoading = false;
+                              } else {
+                                // Simulate loading before restoring previous states
+                                Future.delayed(Duration(milliseconds: 1200), () {
+                                  setState(() {
+                                    isLoading = false;
+                                    OptionSettings.isBluetoothOn = OptionSettings.previousBluetoothState;
+                                    OptionSettings.isWifiOn = OptionSettings.previousWifiState;
+                                    OptionSettings.isHotspotOn = OptionSettings.previousHotspotState;
                                   });
-                                }
-                              });
-                            }),
+                                });
+                              }
+                            });
+                          }
+                        ),
                       ),
                       CupertinoListTile(
                         title: Text('WiFi'),
                         leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: CupertinoColors.systemBlue),
-                            child: Icon(CupertinoIcons.wifi, color: CupertinoColors.white)
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: CupertinoColors.systemBlue),
+                          child: Icon(CupertinoIcons.wifi, color: CupertinoColors.white)
                         ),
                         leadingSize: 32,
                         additionalInfo:  OptionSettings.previousWifiState && isLoading
@@ -167,11 +168,11 @@ class _MyAppState extends State<MyApp> {
                       CupertinoListTile(
                         title: Text('Bluetooth'),
                         leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: CupertinoColors.systemBlue),
-                            child: Icon(CupertinoIcons.bluetooth, color: CupertinoColors.white)
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: CupertinoColors.systemBlue),
+                          child: Icon(CupertinoIcons.bluetooth, color: CupertinoColors.white)
                         ),
                         leadingSize: 32,
                         additionalInfo: OptionSettings.previousBluetoothState && isLoading
@@ -188,11 +189,11 @@ class _MyAppState extends State<MyApp> {
                       CupertinoListTile(
                         title: Text('Cellular'),
                         leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: CupertinoColors.systemGreen),
-                            child: Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white)
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: CupertinoColors.systemGreen),
+                          child: Icon(CupertinoIcons.antenna_radiowaves_left_right, color: CupertinoColors.white)
                         ),
                         leadingSize: 32,
                         trailing: Icon(CupertinoIcons.chevron_forward, color: CupertinoColors.systemGrey2),
@@ -201,11 +202,11 @@ class _MyAppState extends State<MyApp> {
                       CupertinoListTile(
                         title: Text('Personal Hotspot'),
                         leading: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: CupertinoColors.systemGreen),
-                            child: Icon(CupertinoIcons.personalhotspot, color: CupertinoColors.white)
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: CupertinoColors.systemGreen),
+                          child: Icon(CupertinoIcons.personalhotspot, color: CupertinoColors.white)
                         ),
                         leadingSize: 32,
                         additionalInfo: OptionSettings.previousHotspotState && isLoading
